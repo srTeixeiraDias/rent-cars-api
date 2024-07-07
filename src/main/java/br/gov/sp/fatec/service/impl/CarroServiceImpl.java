@@ -7,7 +7,10 @@ import br.gov.sp.fatec.domain.response.CarroResponse;
 import br.gov.sp.fatec.repository.CarroRepository;
 import br.gov.sp.fatec.service.CarroService;
 import java.util.List;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,22 +22,35 @@ public class CarroServiceImpl implements CarroService {
 
     @Override
     public CarroResponse save(CarroRequest carroRequest) {
-        return null;
+        return this.carroMapper.map(this.carroRepository.save(this.carroMapper.map(carroRequest)));
     }
 
     @Override
     public CarroResponse findById(Long id) {
-        return null;
+        return this.carroMapper.map(this.carroRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Carro não encontrado."))
+        );
     }
 
     @Override
     public List<CarroResponse> findAll() {
-        return List.of();
+        return this.carroRepository.findAll().stream()
+                .map(carroMapper::map).toList();
     }
 
     @Override
-    public void updateById(Long id, CarroUpdateRequest carroUpdateRequest) {}
+    public void updateById(Long id, CarroUpdateRequest carroUpdateRequest) {
+        final var saved = this.carroRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Carro não encontrado."));
+
+        final var newcar = this.carroMapper.map(carroUpdateRequest);
+        newcar.setId(saved.getId());
+
+        this.carroRepository.save(newcar);
+    }
 
     @Override
-    public void deleteById(Long id) {}
+    public void deleteById(Long id) {
+        this.carroRepository.deleteById(id);
+    }
 }
