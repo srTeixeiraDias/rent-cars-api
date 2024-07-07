@@ -17,27 +17,29 @@ public class AluguelControllerImpl implements AluguelController {
     private final AluguelService aluguelService;
 
     @Override
-    public ResponseEntity<AluguelResponse> save(AluguelRequest aluguel) {
-        return null;
+    public ResponseEntity<AluguelResponse> save(final AluguelRequest aluguel) {
+        return ResponseEntity.ok(this.aluguelService.save(aluguel));
     }
 
     @Override
-    public ResponseEntity<AluguelResponse> findById(Long id) {
-        return null;
+    public ResponseEntity<AluguelResponse> findById(final Long id) {
+        return ResponseEntity.ok(this.aluguelService.findById(id));
     }
 
     @Override
     public ResponseEntity<List<AluguelResponse>> findAll() {
-        return null;
+        return ResponseEntity.ok(this.aluguelService.findAll());
     }
 
     @Override
-    public ResponseEntity<Void> updateById(Long id, AluguelUpdateRequest request) {
+    public ResponseEntity<Void> updateById(final Long id, final AluguelUpdateRequest request) {
+        this.aluguelService.updateById(id, request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> deleteById(Long id) {
+    public ResponseEntity<Void> deleteById(final Long id) {
+        this.aluguelService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
